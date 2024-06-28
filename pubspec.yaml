@@ -1,0 +1,49 @@
+name: song_recommender
+description: "A new Flutter project."
+publish_to: 'none'
+version: 1.0.1+1
+
+environment:
+  sdk: '>=3.4.3 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+
+  cupertino_icons: ^1.0.6
+  shared_preferences: ^2.2.3
+  url_launcher: ^6.3.0
+  audioplayers: ^6.0.0
+  flutter_dotenv: ^5.1.0
+  provider: ^6.1.2
+  dio: ^5.4.3+1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^3.0.0
+  msix: ^3.16.7
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - .env
+
+msix_config:
+  display_name: Song Recommender
+  app_installer:
+    publish_folder_path: \song_recommender\release
+    hours_between_update_checks: 0
+    automatic_background_task: true
+    update_blocks_activation: true
+    show_prompt: true
+    force_update_from_any_version: false
+  msix_version: 1.0.1.1
+  architecture: x64
+  logo_path: C:\Users\techl\Projects\song_recommender\windows\runner\resources\app_icon.ico
+  capabilities: internetClient
+  certificate_path: C:\song_recommender\song_recommender.pfx
+  certificate_password: qn:ZbH^<1CenbCD:4^dr
