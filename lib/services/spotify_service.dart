@@ -1,24 +1,32 @@
 import 'dart:convert';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SpotifyService {
-  final String? clientId = dotenv.env['SPOTIFY_CLIENT_ID'];
-  final String? clientSecret = dotenv.env['SPOTIFY_CLIENT_SECRET'];
+  String _clientId = '';
+  String _clientSecret = '';
   String? _accessToken;
 
   final Dio dio = Dio();
 
   SpotifyService() {
-    dio.options.validateStatus = (status) {
-      return status != null && status >= 200 && status < 300;
-    };
+    _loadCredentials();
   }
 
-  Future<void> authenticate() async {
+  Future<void> _loadCredentials() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _clientId = prefs.getString('spotifyClientId') ?? '';
+    _clientSecret = prefs.getString('spotifyClientSecret') ?? '';
+  }
+
+  Future<void> _authenticate() async {
     const String authUrl = 'https://accounts.spotify.com/api/token';
-    final String credentials = '$clientId:$clientSecret';
+    final String credentials = '$_clientId:$_clientSecret';
     final String encodedCredentials = base64Encode(utf8.encode(credentials));
+
+    if (_clientId.isEmpty || _clientSecret.isEmpty) {
+      throw Exception('Missing Spotify credentials');
+    }
 
     final response = await dio.post(
       authUrl,
@@ -46,7 +54,7 @@ class SpotifyService {
 
   Future<List<dynamic>> getRecommendationsBySongName(String songName, String artist) async {
     if (_accessToken == null) {
-      await authenticate();
+      await _authenticate();
     }
 
     const String searchUrl = 'https://api.spotify.com/v1/search';
@@ -82,7 +90,7 @@ class SpotifyService {
 
   Future<List<dynamic>> getRecommendationsBySongUrl(String songUrl) async {
     if (_accessToken == null) {
-      await authenticate();
+      await _authenticate();
     }
 
     try {
@@ -95,7 +103,7 @@ class SpotifyService {
 
   Future<List<dynamic>> getRecommendationsByTrackId(String trackId) async {
     if (_accessToken == null) {
-      await authenticate();
+      await _authenticate();
     }
 
     final String recommendationsUrl = 'https://api.spotify.com/v1/recommendations?seed_tracks=$trackId';

@@ -48,7 +48,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       });
     } catch (e) {
       setState(() {
-        _errorMessage = e.toString();
+        _errorMessage = e.toString() == 'Exception: Spotify credentials are not set'
+          ? 'Please set your Spotify credentials in the settings page'
+          : 'An error occurred while fetching recommendations';
       });
     } finally {
       setState(() {
