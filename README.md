@@ -19,4 +19,4 @@ SPOTIFY_CLIENT_SECRET=
 
 ## Additional Information
 
-For more information, see the [Flutter documentation](https://flutter.dev/docs/
+For more information, see the [Flutter documentation](https://flutter.dev/docs/).
